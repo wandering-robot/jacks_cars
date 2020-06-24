@@ -42,7 +42,7 @@ class Main:
                         continue        #index not in bounds therefore illegal move
                     v_s = 0
                     for new_new_state, prob in new_state.next_states.items():
-                        v_s += prob*(new_new_state.next_state_rewards[new_new_state] - n*self.agent.cost2move + self.discount*new_new_state.value)
+                        v_s += prob*(new_new_state.next_state_rewards[new_new_state] - abs(n)*self.agent.cost2move + self.discount*new_new_state.value)
                     if abs(v_s - value) < 0.01:
                         close = True
                     if v_s >= value:
@@ -68,3 +68,10 @@ if __name__ == '__main__':
             break
     for state in main.env.states.values():
         print(f'State {state} -> Value = {state.value:.3f} Policy = {state.policy}')
+
+    matrix = [[None for _ in range(21)] for _ in range(21)]
+    for state in main.env.states.values():
+        i,j = state.tup
+        matrix[i][j] = state.policy
+    for row in matrix:
+        print(row)
