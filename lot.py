@@ -2,8 +2,10 @@ import math as m
 from random import choices
 
 class Lot:
-    lot_num = 0
+    lot_num = 1
     max_car = 20
+
+    car_rental_price = 10
 
     def __init__(self,av_in,av_out):
         self.name = Lot.lot_num     #to autoname the lots
@@ -16,6 +18,9 @@ class Lot:
         self.probs_out = self.poisson_probs(av_out)
 
         self.cars = 0
+
+    def __repr__(self):
+        return f'{self.av_in,self.av_out}'
 
     def in_demand(self):
         return choices(list(self.probs_in.keys()), list(self.probs_in.values()))[0]
@@ -34,10 +39,25 @@ class Lot:
                 break
         return prob_dict
 
-if __name__ == "__main__":
-    lot1 = Lot(3,3)
-    print(lot1.probs_in)
-    print(lot1.out_demand())
+class State(Lot):
+    def __init__(self,tup):
+        self.tup = tup
+        self.lot1_cars, self.lot2_cars = self.tup
+        
+        self.value = 0
+        self.policy = 0
 
+        self.next_states = None
+        self.next_state_rewards = {}
+
+    def __repr__(self):
+        return f'{self.tup}'
+
+    def move_cars(self,n):
+        lot1_cars, lot2_cars = self.lot1_cars - n, self.lot2_cars + n
+        return (lot1_cars,lot2_cars)
+
+if __name__ == "__main__":
+    l1 = Lot(2,3)
 
 
